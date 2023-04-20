@@ -66,7 +66,11 @@ class InputBox:
                 
     def ans(self):
         return self.text
-
+    
+    def reset(self):
+        self.text = ''
+        self.txt_surface = FONT.render('', True,(255,255,255))
+        
     def update(self):
         # Resize the box if the text is too long.
         width = max(200, self.txt_surface.get_width()+10)
@@ -90,20 +94,24 @@ last = fontS.render('LASTNAME', True, (0,0,0), (255,255,255))
 age = fontS.render('AGE', True, (0,0,0), (255,255,255))
 submitt = fontS.render('SUBMIT', True, (255,255,255))
 submittt = fontS.render('SUBMIT', True, (0,0,0))
+resett= fontS.render('RESET', True, (255,0,0))
+resettt = fontS.render('RESET', True, (0,0,0))
 loginRect = login.get_rect() # text size
 firstRect = first.get_rect() # text size
 lastRect = last.get_rect() # text size
 ageRect = age.get_rect() # text size
 submitRect = submitt.get_rect() # text size
 submit2Rect = submittt.get_rect()
+resetRect = resett.get_rect()
 loginRect.center = (win_x // 2, 250)
 submitRect.center = (win_x // 2, 700)
 
+resetRect.center = (win_x // 2, 775)
 COLOR_INACTIVE = (0,0,0)# ตั้งตัวแปรให้เก็บค่าสี เพื่อนำไปใช้เติมสีให้กับกล่องข้อความตอนที่คลิกที่กล่องนั้นๆอยู่
 COLOR_ACTIVE = (148,148,148)    # ^^^
 FONT = pg.font.Font('BAUHS93.ttf', 32)
 val = 0
-
+r = 0
 input_box1 = InputBox(win_x // 2 - 100, 350, 140, 45,False) # สร้าง InputBox1
 input_box2 = InputBox(win_x // 2 - 100, 450, 140, 45,False) # สร้าง InputBox2
 input_box3 = InputBox(win_x // 2 - 100, 550, 140, 45,True) # สร้าง InputBox2
@@ -111,6 +119,7 @@ input_boxes = [input_box1, input_box2, input_box3] # เก็บ InputBox ไ�
 run = True
 
 submit = Button(win_x // 2-65 ,675,130,50)
+reset = Button(win_x // 2-65 ,750,130,50)
         
 while run:
     screen.fill((255, 255, 255))
@@ -121,11 +130,19 @@ while run:
     screen.blit(age,(win_x // 2 - 100,520))
     submit.draw(screen)
     screen.blit(submitt,submitRect)
+    reset.draw(screen)
+    screen.blit(resett,resetRect)
     
     pg.draw.rect(screen,(0,0,0),(0,900,1920,100))
    
     if val == 1:
         screen.blit(ans,ansRect)
+    if r == 1:
+        input_box1.reset()
+        input_box2.reset()
+        input_box3.reset()
+        ans = fontS.render('', True, (255,255,255))
+        r = 0
     if submit.hover():
         if submit.click():
             submit.R = 255
@@ -144,6 +161,21 @@ while run:
         submit.R = 0
         submit.G = 0
         submit.B = 0
+        
+    if reset.hover():
+        if reset.click():
+            reset.R = 255
+            reset.G = 255
+            reset.B = 255
+            r = 1
+        else :
+            reset.R = 0
+            reset.G = 0
+            reset.B = 0
+    else:
+        reset.R = 0
+        reset.G = 0
+        reset.B = 0
     
     for box in input_boxes: # ทำการเรียก InputBox ทุกๆตัว โดยการ Loop เข้าไปยัง list ที่เราเก็บค่า InputBox ไว้
         box.update() # เรียกใช้ฟังก์ชัน update() ของ InputBox
